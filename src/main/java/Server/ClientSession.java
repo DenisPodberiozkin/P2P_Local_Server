@@ -36,7 +36,7 @@ public class ClientSession implements Runnable {
                         String publicIP = Data.getPublicIP();
                         String ID = Data.getId();
                         String port = Data.getPort() + "";
-                        String msg = localIP + " " + publicIP + " " + ID + " " + port;
+                        String msg = "LN " + localIP + " " + publicIP + " " + ID + " " + port;
                         writer.println(msg);
                         break;
                     case "SETLN":
