@@ -8,12 +8,14 @@ import java.net.Socket;
 
 public class ClientSession implements Runnable {
 
-    BufferedReader reader;
-    PrintWriter writer;
-    private Socket clientSocket;
+    private final Socket clientSocket;
+    private BufferedReader reader;
+    private PrintWriter writer;
+    private boolean isSessionOpen;
 
     public ClientSession(Socket clientSocket) {
         this.clientSocket = clientSocket;
+        this.isSessionOpen = true;
     }
 
     @Override
@@ -23,8 +25,9 @@ public class ClientSession implements Runnable {
             writer = new PrintWriter(clientSocket.getOutputStream(), true);
 
 
-            while (true) {
+            while (isSessionOpen) {
                 String receivedMessage = reader.readLine();
+//                System.out.println(receivedMessage);
                 String[] tokens = receivedMessage.split(" ");
 
                 switch (tokens[0]) {
@@ -42,19 +45,36 @@ public class ClientSession implements Runnable {
                         Data.setId(tokens[3]);
                         Data.setPort(Integer.parseInt(tokens[4]));
                         break;
-                    case "DC":
-                        reader.close();
-                        writer.close();
-                        break;
                 }
+
+
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            this.isSessionOpen = false;
+        } finally {
+            closeSession();
         }
     }
 
-//    private void sendMessage(String msg, boolean withVerify) {
-//        writer
-//    }
+    private void closeSession() {
+        try {
+            System.out.println(clientSocket.getInetAddress() + " disconnected");
+            if (writer != null) {
+                writer.close();
+            }
+            if (reader != null) {
+                reader.close();
+
+            }
+            if (!clientSocket.isClosed()) {
+                clientSocket.close();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error closing session");
+            e.printStackTrace();
+        }
+
+    }
 }
