@@ -3,8 +3,10 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class Server implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
     private final int port;
     private int serverIP;
     private ServerSocket serverSocket;
@@ -19,11 +21,11 @@ public class Server implements Runnable {
     @Override
     public void run() {
         isWorking = true;
+        LOGGER.info("Server " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort() + " started");
         while (isWorking) {
             try {
-//                System.out.println("Waiting for client connection");
                 Socket clientSocket = serverSocket.accept();
-                System.out.println(clientSocket.getInetAddress() + " has connected");
+                LOGGER.info(clientSocket.getInetAddress() + " has connected");
                 ClientSession clientSession = new ClientSession(clientSocket);
                 new Thread(clientSession).start();
             } catch (IOException e) {
