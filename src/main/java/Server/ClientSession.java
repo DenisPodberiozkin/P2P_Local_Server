@@ -37,19 +37,12 @@ public class ClientSession implements Runnable {
                     final String msg;
                     switch (tokens[1]) {
                         case "GETLN":
-                            String localIP = Data.getLocalIP();
-                            String publicIP = Data.getPublicIP();
-                            String ID = Data.getId();
-                            String port = Data.getPort() + "";
-                            msg = sessionId + " LN " + localIP + " " + publicIP + " " + ID + " " + port;
+                            msg = sessionId + " LN " + Data.getLastNodeJSON();
                             writer.println(msg);
                             LOGGER.info("Reply " + msg + " was sent to " + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
                             break;
                         case "SETLN":
-                            Data.setLocalIP(tokens[2]);
-                            Data.setPublicIP(tokens[3]);
-                            Data.setId(tokens[4]);
-                            Data.setPort(Integer.parseInt(tokens[5]));
+                            Data.setLastNodeJSON(tokens[2]);
                             msg = sessionId + " SETLN  OK";
                             writer.println(msg);
                             LOGGER.info("Reply " + msg + " was sent to " + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
