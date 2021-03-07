@@ -39,25 +39,29 @@ public class ClientSession implements Runnable {
                         case "GETLN":
                             msg = sessionId + " LN " + Data.getLastNodeJSON();
                             writer.println(msg);
-                            LOGGER.info("Reply " + msg + " was sent to " + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
                             break;
                         case "SETLN":
-                            Data.setLastNodeJSON(tokens[2]);
+                            Data.addLastConnectedNode(tokens[2]);
                             msg = sessionId + " SETLN  OK";
                             writer.println(msg);
-                            LOGGER.info("Reply " + msg + " was sent to " + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
-
                             break;
                         case "PING":
                             heartBeatManager.pingReceived();
                             msg = sessionId + " PING OK";
                             writer.println(msg);
-                            LOGGER.info("Reply " + msg + " was sent to " + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
+                            break;
+                        case "REMOVE":
+                            String nodeToRemoveJson = tokens[2];
+                            Data.removeOldestConnection(nodeToRemoveJson);
+                            msg = sessionId + " REMOVE OK";
+                            writer.println(msg);
                             break;
                         default:
+                            msg = sessionId + " ERROR - Unexpected token " + tokens[1] + " in message " + receivedMessage;
                             LOGGER.warning("Unexpected token " + tokens[1] + " in message " + receivedMessage);
-                            writer.println(sessionId + " ERROR - Unexpected token " + tokens[1] + " in message " + receivedMessage);
+                            writer.println(msg);
                     }
+                    LOGGER.info("Reply " + msg + " was sent to " + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
                 } else {
                     this.isSessionOpen = false;
                 }
