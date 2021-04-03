@@ -7,7 +7,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Server server = new Server(4444);
+        Server server = new Server(0);
         new Thread(server).start();
 
 
