@@ -10,7 +10,6 @@ package Util;
 public class FixedStack<T> {
     private final T[] stack;
     private final int size;
-    private T[] temp;
     private int top;
 
     public FixedStack(int size) {
@@ -43,7 +42,4 @@ public class FixedStack<T> {
         return size;
     }
 
-    public int elements() {
-        return top + 1;
-    }
 }

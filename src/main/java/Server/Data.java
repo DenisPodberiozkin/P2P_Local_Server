@@ -4,7 +4,6 @@ import Util.FixedStack;
 
 
 public class Data {
-    private static String lastNodeJSON;
     private static final FixedStack<String> lastConnectedNodes = new FixedStack<>(5);
 
     public static synchronized String getLastNodeJSON() {
