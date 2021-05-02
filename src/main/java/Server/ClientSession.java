@@ -54,6 +54,9 @@ public class ClientSession implements Runnable {
                         tokens = payload.split(" ");
                     } else {
                         tokens = Arrays.stream(tokens, 1, tokens.length).toArray(String[]::new);
+                        if (!tokens[0].equals("CSC")) {
+                            throw new GeneralSecurityException();
+                        }
                     }
 
                     String msg;
